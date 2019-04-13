@@ -164,17 +164,31 @@ public class Main extends Application{
 	    	
 	    	// setting the scene and displaying to the stage
 			Scene scene = new Scene(grid, 500, 600);
+			primaryStage.setX(20);
+			primaryStage.setY(20);
 			primaryStage.setTitle("Critter Control");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
 			/*
-			 * Action to be performed when seed button is pressed.
+			 * Create the second window to display world
 			 */
-			quit_btn.setOnAction(new EventHandler<ActionEvent>() { // what to do when butt is pressed
+			Stage worldStage = new Stage(); // creates a second stage for the button.
+			worldStage.setX(700);
+			worldStage.setY(50);
+			worldStage.setTitle("World");	
+			GridPane worldGrid = new GridPane();
+			Scene secondScene = new Scene(worldGrid, 500, 500); // creates a second scene object with the Stackpane
+			worldStage.setScene(secondScene); // puts the scene onto the second stage 
+			
+			/*
+			 * Action to be performed when view world button is pressed.
+			 */
+			viewWorld_btn.setOnAction(new EventHandler<ActionEvent>() { // what to do when butt is pressed
 				@Override
 				public void handle(ActionEvent event) {
-					System.exit(0);
+					Critter.displayWorld(worldGrid);
+					worldStage.show(); // display the stage with the scene
 				}
 			});
 			

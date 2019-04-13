@@ -18,6 +18,9 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.*;
+import javafx.scene.shape.*;
 
 /*
  * See the PDF for descriptions of the methods and fields in this
@@ -114,46 +117,70 @@ public abstract class Critter {
      * Displays grid with current active critters 
      * 
      */
-    public static void displayWorld(Object pane) {
-    	int height = Params.WORLD_HEIGHT + 2;
-    	int width = Params.WORLD_WIDTH + 2;
-        String[][] world = new String[height][width];
-        // add + to corners
-        world[0][0] = "+";
-        world[0][width-1] = "+";
-        world[height-1][0] = "+";
-        world[height-1][width-1] = "+";
-        // add top and bottom dashes
-        for (int i = 0; i < width; i++) {
-        	if (i != 0 && i != width-1) {
-	        	world[0][i] = "-";
-	        	world[height-1][i] = "-";
-        	}
-        }
-        // add side dashes
-        for (int j = 0; j < height; j++) {
-        	if (j != 0 && j != height-1) {
-            	world[j][0] = "|";
-            	world[j][width-1] = "|";
-        	}
-        }
-        // adding critters to world
-        for (Critter critter : population) {
-        	world[critter.y_coord+1][critter.x_coord+1] = critter.toString();
-        } 
-        // printing world
-        for (int i = 0; i < height; i++) {
-        	for (int j = 0; j < width; j++) {
-        		if (world[i][j] == null) {
-        			System.out.print(" ");
-        		}
-        		else {
-        			System.out.print(world[i][j]);
-        		}
-        	}
-        	System.out.println();
-        }
+    public static void displayWorld(GridPane pane) {
+    	paintGridLines(pane);
+//    	int height = Params.WORLD_HEIGHT + 2;
+//    	int width = Params.WORLD_WIDTH + 2;
+//        String[][] world = new String[height][width];
+//        // add + to corners
+//        world[0][0] = "+";
+//        world[0][width-1] = "+";
+//        world[height-1][0] = "+";
+//        world[height-1][width-1] = "+";
+//        // add top and bottom dashes
+//        for (int i = 0; i < width; i++) {
+//        	if (i != 0 && i != width-1) {
+//	        	world[0][i] = "-";
+//	        	world[height-1][i] = "-";
+//        	}
+//        }
+//        // add side dashes
+//        for (int j = 0; j < height; j++) {
+//        	if (j != 0 && j != height-1) {
+//            	world[j][0] = "|";
+//            	world[j][width-1] = "|";
+//        	}
+//        }
+//        // adding critters to world
+//        for (Critter critter : population) {
+//        	world[critter.y_coord+1][critter.x_coord+1] = critter.toString();
+//        } 
+//        // printing world
+//        for (int i = 0; i < height; i++) {
+//        	for (int j = 0; j < width; j++) {
+//        		if (world[i][j] == null) {
+//        			System.out.print(" ");
+//        		}
+//        		else {
+//        			System.out.print(world[i][j]);
+//        		}
+//        	}
+//        	System.out.println();
+//        }
     }
+    
+    /*
+	 * Paint the grid lines in orange.  The purpose is two-fold -- to indicate boundaries of 
+	 * icons, and as place-holders for empty cells.  Without placeholders, grid may not display properly.
+	 */
+	private static void paintGridLines(GridPane grid) {
+		int size;
+		if (Params.WORLD_HEIGHT >= Params.WORLD_WIDTH) {
+			size = 500/Params.WORLD_HEIGHT;
+		}
+		else {
+			size = 500/Params.WORLD_WIDTH;
+		}
+		for (int i = 0; i < Params.WORLD_WIDTH; i++) { // columns
+			for (int j = 0; j < Params.WORLD_HEIGHT; j++) { // rows
+				Shape s = new Rectangle(size, size);
+				s.setFill(null);
+				s.setStroke(Color.ORANGE);
+				grid.add(s, i, j);
+			}
+		}
+	}
+    
 
 	/* END --- NEW FOR PROJECT 5
 			rest is unchanged from Project 4 */
