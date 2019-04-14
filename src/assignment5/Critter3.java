@@ -16,7 +16,6 @@ package assignment5;
 
 import java.util.List;
 
-
 /* Critter 3 = The Fighter
  * If it has more than enough energy, then it will reproduce
  *     otherwise, it will walk
@@ -57,48 +56,12 @@ public class Critter3 extends Critter {
 		return "3";
 	}
 	
-    /**
-     * Shows number of type 3 critters and number of type 3
-     * critters that have strong energy (>= 80), healthy
-     * energy (80 > energy > 40), and weak energy (energy <= 40).
-     * 
-     * @param critter_class_name
-     */
-	public static String runStats(List<Critter> critter3s) {
-		int strong = 0;		//	energy >= 80
-		int healthy = 0;	//	80 > energy > 40
-		int weak = 0;		// 	energy <= 40
-		// count number of critters w those characteristics ^
-		for(Critter critter : critter3s) {
-			int energy = critter.getEnergy();
-			if (energy >= 80) {
-				strong++;
-			}
-			else if (80 > energy && energy > 40) {
-				healthy++;
-			}
-			else {
-				weak++;
-			}
-		}
-		// print stats
-		System.out.println(critter3s.size() + " critters as follows -- 3:" + critter3s.size());
-		System.out.println("Energy status:");
-		System.out.println("Number of Strong (80<=): " + strong);
-		System.out.println("Number of Healthy (40 < energy < 80): " + healthy);
-		System.out.println("Number of Weak (<=40): " + weak);
-		return null;
-	}
 
 	@Override
 	public CritterShape viewShape() {
 		return CritterShape.DIAMOND;
 	}
 	
-	@Override
-    public javafx.scene.paint.Color viewColor() {
-        return javafx.scene.paint.Color.WHITE;
-    }
 
 	@Override
     public javafx.scene.paint.Color viewOutlineColor() {
@@ -110,4 +73,8 @@ public class Critter3 extends Critter {
         return javafx.scene.paint.Color.GREEN;
     }
 
+    public static String runStats(List<Critter> critter3s) {
+    	String st = "" + critter3s.size() + " critters as follows -- 3:" + critter3s.size();
+    	return st;
+    }
 }

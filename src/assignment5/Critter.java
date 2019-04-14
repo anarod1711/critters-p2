@@ -16,7 +16,9 @@ package assignment5;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javafx.scene.Node;
@@ -112,10 +114,22 @@ public abstract class Critter {
     }
 
     public static String runStats(List<Critter> critters) {
-        // TODO Implement this method
-        return null;
+    	String st = ("" + critters.size() + " critters as follows -- ");
+        Map<String, Integer> critter_count = new HashMap<String, Integer>();
+        for (Critter crit : critters) {
+            String crit_string = crit.toString();
+            critter_count.put(crit_string,
+                    critter_count.getOrDefault(crit_string, 0) + 1);
+        }
+        String prefix = "";
+        for (String s : critter_count.keySet()) {
+            st += (prefix + s + ":" + critter_count.get(s));
+            prefix = ", ";
+        }
+        return st;
     }
-
+   
+    
     /**
      * Displays grid with current active critters 
      * 

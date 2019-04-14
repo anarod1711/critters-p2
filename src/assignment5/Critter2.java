@@ -16,7 +16,6 @@ package assignment5;
 
 import java.util.List;
 
-
 /* Critter2 = The Mother
  * Will stay in 1 position
  * Will always choose to reproduce in doTimeStep()
@@ -57,39 +56,6 @@ public class Critter2 extends Critter {
 	public String toString() {
 		return "2";
 	}
-	
-    /**
-     * Shows number of type 2 critters and number of type 2
-     * critters that have strong energy (>= 80), healthy
-     * energy (80 > energy > 40), and weak energy (energy <= 40).
-     * 
-     * @param critter_class_name
-     */
-	public static String runStats(List<Critter> critter2s) {
-		int strong = 0;		//	energy >= 80
-		int healthy = 0;	//	80 > energy > 40
-		int weak = 0;		// 	energy <= 40
-		// count number of critters w those characteristics ^
-		for(Critter critter : critter2s) {
-			int energy = critter.getEnergy();
-			if (energy >= 80) {
-				strong++;
-			}
-			else if (80 > energy && energy > 40) {
-				healthy++;
-			}
-			else {
-				weak++;
-			}
-		}
-		// print stats
-		System.out.println(critter2s.size() + " critters as follows -- 2:" + critter2s.size());
-		System.out.println("Energy status:");
-		System.out.println("Number of Strong (80<=): " + strong);
-		System.out.println("Number of Healthy (40 < energy < 80): " + healthy);
-		System.out.println("Number of Weak (<=40): " + weak);
-		return null;
-	}
 
 
 	@Override
@@ -97,10 +63,6 @@ public class Critter2 extends Critter {
 		return CritterShape.TRIANGLE;
 	}
 	
-	@Override
-    public javafx.scene.paint.Color viewColor() {
-        return javafx.scene.paint.Color.WHITE;
-    }
 
 	@Override
     public javafx.scene.paint.Color viewOutlineColor() {
@@ -112,4 +74,8 @@ public class Critter2 extends Critter {
         return javafx.scene.paint.Color.RED;
     }
     
+    public static String runStats(List<Critter> critter2s) {
+    	String st = "" + critter2s.size() + " critters as follows -- 2:" + critter2s.size();
+    	return st;
+    }
 }
