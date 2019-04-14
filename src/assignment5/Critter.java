@@ -18,6 +18,8 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
@@ -41,6 +43,7 @@ public abstract class Critter {
         STAR
     }
 
+    static int size = 0;
     /* the default color is white, which I hope makes critters invisible by default
      * If you change the background color of your View component, then update the default
      * color to be the same as you background
@@ -118,45 +121,13 @@ public abstract class Critter {
      * 
      */
     public static void displayWorld(GridPane pane) {
+    	pane.getChildren().clear();
     	paintGridLines(pane);
-//    	int height = Params.WORLD_HEIGHT + 2;
-//    	int width = Params.WORLD_WIDTH + 2;
-//        String[][] world = new String[height][width];
-//        // add + to corners
-//        world[0][0] = "+";
-//        world[0][width-1] = "+";
-//        world[height-1][0] = "+";
-//        world[height-1][width-1] = "+";
-//        // add top and bottom dashes
-//        for (int i = 0; i < width; i++) {
-//        	if (i != 0 && i != width-1) {
-//	        	world[0][i] = "-";
-//	        	world[height-1][i] = "-";
-//        	}
-//        }
-//        // add side dashes
-//        for (int j = 0; j < height; j++) {
-//        	if (j != 0 && j != height-1) {
-//            	world[j][0] = "|";
-//            	world[j][width-1] = "|";
-//        	}
-//        }
-//        // adding critters to world
-//        for (Critter critter : population) {
-//        	world[critter.y_coord+1][critter.x_coord+1] = critter.toString();
-//        } 
-//        // printing world
-//        for (int i = 0; i < height; i++) {
-//        	for (int j = 0; j < width; j++) {
-//        		if (world[i][j] == null) {
-//        			System.out.print(" ");
-//        		}
-//        		else {
-//        			System.out.print(world[i][j]);
-//        		}
-//        	}
-//        	System.out.println();
-//        }
+    	
+    	for (Critter critter : population) {
+    		Shape s = critter.getIcon(critter.viewShape());
+    		pane.add(s, critter.x_coord, critter.y_coord);
+    	}
     }
     
     /*
@@ -164,12 +135,11 @@ public abstract class Critter {
 	 * icons, and as place-holders for empty cells.  Without placeholders, grid may not display properly.
 	 */
 	private static void paintGridLines(GridPane grid) {
-		int size;
 		if (Params.WORLD_HEIGHT >= Params.WORLD_WIDTH) {
-			size = 500/Params.WORLD_HEIGHT;
+			size = 575/Params.WORLD_HEIGHT;
 		}
 		else {
-			size = 500/Params.WORLD_WIDTH;
+			size = 575/Params.WORLD_WIDTH;
 		}
 		for (int i = 0; i < Params.WORLD_WIDTH; i++) { // columns
 			for (int j = 0; j < Params.WORLD_HEIGHT; j++) { // rows
@@ -179,6 +149,58 @@ public abstract class Critter {
 				grid.add(s, i, j);
 			}
 		}
+	}
+	
+	/* 
+	 * Returns a square or a circle depending on the shapeIndex parameter
+	 * 
+	 */
+	private Shape getIcon(CritterShape shape) {
+		Shape s = null;
+		
+		switch(shape) {
+		case CIRCLE: s = new Circle(size/2);
+			break;
+		case SQUARE: s = new Rectangle(size, size);
+			break;
+		case TRIANGLE: s = new Polygon();
+			((Polygon) s).getPoints().addAll(new Double[]{
+			    (double) size-1, (double) size-1,
+			    (double) 1, (double) size-1,
+			    (double) (size)/2-1, 1.0 });
+			break;
+		case DIAMOND: s = new Polygon();
+			((Polygon) s).getPoints().addAll(new Double[]{
+				    (double) size/2, (double) 2,
+				    (double) size-1, (double) size/2,
+				    (double) (size)/2, (double) size-1,
+				    (double) 1, (double) size/2});
+				break;
+		case STAR: s = new Polygon();
+		((Polygon) s).getPoints().addAll(new Double[]{
+			    (double) size/2, (double) 1,
+			    (double) (size/6)*4, (double) (size/6)*2,
+			    (double) size-1, (double) (size/2),
+			    (double) (size/6)*4, (double) (size/6)*4,
+			    (double) (size/6)*5, (double) size-1,
+			    (double) (size/2), (double) (size/6)*5,
+			    (double) (size/6), (double) size-1,
+			    (double) (size/6)*2, (double) (size/6)*4,
+			    (double) 1, (double) (size/2),
+			    (double) (size/6)*2, (double) (size/6)*2});
+			break;
+		default: s = new Circle(size/2);
+//		case TRIANGLE: s = new Triangle();
+//		break;
+//		case DIAMOND: s = new Rectangle(size, size);
+//			break;
+//		case STAR: s = new Circle(size);
+//		break;
+		}
+
+		s.setFill(viewFillColor()); 
+		s.setStroke(viewOutlineColor());
+		return s;
 	}
     
 

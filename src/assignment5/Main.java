@@ -178,7 +178,7 @@ public class Main extends Application{
 			worldStage.setY(50);
 			worldStage.setTitle("World");	
 			GridPane worldGrid = new GridPane();
-			Scene secondScene = new Scene(worldGrid, 500, 500); // creates a second scene object with the Stackpane
+			Scene secondScene = new Scene(worldGrid, 600, 600); // creates a second scene object with the Stackpane
 			worldStage.setScene(secondScene); // puts the scene onto the second stage 
 			
 			/*
