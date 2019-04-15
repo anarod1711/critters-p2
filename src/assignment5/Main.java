@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.event.ChangeListener;
@@ -11,9 +12,6 @@ import javax.swing.event.ChangeListener;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -59,9 +57,8 @@ public class Main extends Application{
 		    }
 		});
     }
-
+    
     public static void main(String[] args) {
-    	
     	// launching javafx
         launch(args);
     }
@@ -80,7 +77,9 @@ public class Main extends Application{
 			 * 6. ability to terminate the program ## DONE ##
 			 * 7. "run" --> the speed of animation
 			 */
+			BorderPane root = new BorderPane();
 			GridPane grid = new GridPane();
+			root.setTop(grid);
 			// adding header for control
 			Text header = new Text();
 	    	header.setText("Welcome to Critters");
@@ -101,17 +100,17 @@ public class Main extends Application{
 	    	critter_num.setText("Choose # of Critters:");
 	    	critter_num.setFont(Font.font("Verdana", 12));
 	    	critter_num.setTranslateX(5);
-	    	critter_num.setTranslateY(70);
+	    	critter_num.setTranslateY(80);
 	    	TextField critter_num_input = new TextField(); // user input for num of critters
 	    	critter_num_input.setTranslateX(150);
-	    	critter_num_input.setTranslateY(70);
+	    	critter_num_input.setTranslateY(80);
 	    	Button critter_add_btn = new Button("Add Critters"); // button to add critters
 	    	critter_add_btn.setTranslateX(380);
-	    	critter_add_btn.setTranslateY(70);
+	    	critter_add_btn.setTranslateY(80);
 	    	Text critters_added = new Text(); // message when added critters
 	    	critters_added.setFont(Font.font("Verdana", FontPosture.ITALIC, 12));
 	    	critters_added.setTranslateX(150);
-	    	critters_added.setTranslateY(90);
+	    	critters_added.setTranslateY(100);
 	    	critters_added.setFill(Color.RED);
 	    	// run the world (time steps)
 	    	Text timestep_num = new Text(); // title for time steps
@@ -148,7 +147,8 @@ public class Main extends Application{
 	    	seed_added.setTranslateY(200);
 	    	seed_added.setFill(Color.RED);
 	    	// runStats
-	    	int y = 220;
+	    	int y = 240;
+	    	Collections.sort(critter_classes);
 	    	for (int i = 0; i < critter_classes.size(); i++) {
 	    		Text checkboxName = new Text(); // title for time steps
 		    	checkboxName.setText(critter_classes.get(i));
@@ -177,7 +177,8 @@ public class Main extends Application{
 								Constructor<?> constructor = critterClass.getConstructor();
 								Object new_critter = constructor.newInstance();
 								Method m = new_critter.getClass().getDeclaredMethod("runStats", List.class);
-								test.setText((String) m.invoke(critterClass, critters));
+								test.setText(((String) m.invoke(critterClass, critters)));
+								startTask(checkbox, grid);
 		                    }	                    	
 		                    else {
 		                        test.setText("");
@@ -191,7 +192,8 @@ public class Main extends Application{
 		                	List<Critter> critters;
 							try {
 								critters = Critter.getInstances(critter);
-								test.setText((String) Critter.runStats(critters));
+								test.setText(((String) Critter.runStats(critters)));
+								startTask(checkbox, grid);
 							} catch (InvalidCritterException e1) {
 							}
 						}
@@ -208,44 +210,28 @@ public class Main extends Application{
 	    	
 	    	
 	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
 	    	// animation
-	    	GridPane animation_grid = new GridPane(); // new gridpane, for disabling
+	    	AnchorPane animation_grid = new AnchorPane(); // new gridpane, for disabling
 	    	ChoiceBox<Integer> run_choices = new ChoiceBox(); // choices of critters
 	    	run_choices.getItems().addAll(anim_speeds);
 	    	run_choices.getSelectionModel().selectFirst();
 	    	run_choices.setTranslateX(5);
-	    	run_choices.setTranslateY(530);
+	    	run_choices.setTranslateY(-10);
 	    	Button run_btn = new Button("Run Animation"); // button to add steps
-	    	run_btn.setTranslateX(65);
-	    	run_btn.setTranslateY(530);
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
+	    	run_btn.setTranslateX(70);
+	    	run_btn.setTranslateY(-10);
 	    	
 	    	
 	    	
 	    	
 	    	// terminate the program
 	    	Button quit_btn = new Button("Quit Critters"); // button to add steps
-	    	quit_btn.setTranslateX(415);
-	    	quit_btn.setTranslateY(570);
+	    	quit_btn.setTranslateX(400);
+	    	quit_btn.setTranslateY(10);
 	    	// view the world
 	    	Button viewWorld_btn = new Button("Display World"); // button to add steps
-	    	viewWorld_btn.setTranslateX(5);
-	    	viewWorld_btn.setTranslateY(570);
+	    	viewWorld_btn.setTranslateX(250);
+	    	viewWorld_btn.setTranslateY(10);
 	    	
 	    	// adding nodes to grid
 	    	grid.getChildren().add(header);
@@ -265,9 +251,12 @@ public class Main extends Application{
 	    	grid.getChildren().add(seed_added);
 	    	grid.getChildren().add(quit_btn);
 	    	grid.getChildren().add(viewWorld_btn);
+	    	animation_grid.getChildren().add(run_btn);
+	    	animation_grid.getChildren().add(run_choices);
 	    	
 	    	// setting the scene and displaying to the stage
-			Scene scene = new Scene(grid, 500, 600);
+	    	root.setBottom(animation_grid);
+			Scene scene = new Scene(root, 500, 600);
 			primaryStage.setX(20);
 			primaryStage.setY(20);
 			primaryStage.setTitle("Critter Control");
@@ -448,6 +437,43 @@ public class Main extends Application{
             try {
             	System.out.println(run_cb.getValue());
             	grid.setDisable(true);
+//            	for (int i = 0; i < run_num; i++) {
+//            		Critter.worldTimeStep();
+//            	}
+//            	Critter.displayWorld(worldGrid);
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                //e.printStackTrace();
+            }
+        }
+    }
+    
+    // attempt to continuously display run stats
+    public void startTask(CheckBox run_stats,  GridPane grid) 
+    {
+        // Create a Runnable
+        Runnable task1 = new Runnable()
+        {
+            public void run()
+            {
+                runTask(run_stats, grid);
+            }
+        };
+ 
+        // Run the task in a background thread
+        Thread backgroundThread = new Thread(task1);
+        // Terminate the running thread if the application exits
+        backgroundThread.setDaemon(true);
+        // Start the thread
+        backgroundThread.start();
+    }  
+    
+    public void runTask(CheckBox run_stats, GridPane grid) {
+        while(!run_stats.isSelected()) {
+            try {
+            	System.out.println(1);
+            	//grid.setDisable(true);
 //            	for (int i = 0; i < run_num; i++) {
 //            		Critter.worldTimeStep();
 //            	}
