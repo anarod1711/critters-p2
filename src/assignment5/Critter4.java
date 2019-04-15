@@ -28,7 +28,8 @@ import java.util.List;
 
 public class Critter4 extends Critter {
 
-	/* Will walk if energy is above 70, no rush
+	/* Will walk if energy is above 70, no rush,
+	 * preferably towards an empty spot (i.e. uses look)
 	 * Will run if energy is 70 or below, starting to panic
 	 * Will stay put if energy is below 40, need to 
 	 * reserve energy to fight
@@ -36,7 +37,14 @@ public class Critter4 extends Critter {
 	@Override
 	public void doTimeStep() {
 		if (getEnergy() > 70) {
-			walk(Critter.getRandomInt(8));
+			int dir = 0;
+			while (dir < 8) {
+				if (look(dir, false) == null) {
+					walk(dir);
+					break;
+				}
+				dir++;
+			}
 		}
 		else if (getEnergy() >= 40) {
 			run(Critter.getRandomInt(8));

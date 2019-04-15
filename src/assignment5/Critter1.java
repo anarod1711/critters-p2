@@ -52,7 +52,8 @@ public class Critter1 extends Critter {
 	}
 
 	/* Critter1 doesn't fight and runs if its energy is
-	 * below 70 and above 40, as it still has hopes of
+	 * below 70 and above 40, preferably towards an empty
+	 * space, as it still has hopes of
 	 * living. It fights only if his energy is 40 or 
 	 * below (weak energy status).
 	 * 
@@ -62,7 +63,14 @@ public class Critter1 extends Critter {
 	@Override
 	public boolean fight(String oponent) {
 		if (getEnergy() < 70 && getEnergy() > 40) {
-			run(dir);
+			int dir = 0;
+			while (dir < 8) {
+				if (look(dir, true) == null) {
+					run(dir);
+					break;
+				}
+				dir++;
+			}
 			return false;
 		}
 		return true;
