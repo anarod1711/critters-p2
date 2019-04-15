@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.event.ChangeListener;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -345,6 +346,8 @@ public class Main extends Application{
 					} catch (NumberFormatException | InvalidCritterException e) {
 						timestep_added.setText("error processing: " + timestep_input.getText());
 					}
+					Critter.displayWorld(worldGrid);
+					worldStage.show(); // display the stage with the scene
 				}
 			});
 			
@@ -380,6 +383,8 @@ public class Main extends Application{
 					} catch (NumberFormatException | InvalidCritterException e) {
 						critters_added.setText("error processing: " + critter_num_input.getText());
 					}
+					Critter.displayWorld(worldGrid);
+					worldStage.show(); // display the stage with the scene
 				}
 			});
 		} catch (Exception e) {
@@ -409,15 +414,21 @@ public class Main extends Application{
     public void runTask(ChoiceBox run_cb, GridPane worldGrid, GridPane grid) {
         while(!run_active) {
             try {
-            	System.out.println(run_cb.getValue());
+            	//System.out.println(run_cb.getValue());
             	grid.setDisable(true);
-//            	for (int i = 0; i < run_num; i++) {
-//            		Critter.worldTimeStep();
-//            	}
-//            	Critter.displayWorld(worldGrid);
-                Thread.sleep(100);
+            	for (int i = 0; i < (int) run_cb.getValue(); i++) {
+            		//System.out.println((int) run_cb.getValue());
+            		Critter.worldTimeStep();
+            	}
+            	Platform.runLater(new Runnable() {
+            	    @Override
+            	    public void run() {
+            	    	Critter.displayWorld(worldGrid);
+            	    }
+            	});
+                Thread.sleep(1000);
             }
-            catch (InterruptedException e) {
+            catch (InterruptedException | InvalidCritterException e) {
                 //e.printStackTrace();
             }
         }
@@ -436,11 +447,11 @@ public class Main extends Application{
         };
  
         // Run the task in a background thread
-        Thread backgroundThread = new Thread(task1);
+        Thread backgroundThread1 = new Thread(task1);
         // Terminate the running thread if the application exits
-        backgroundThread.setDaemon(true);
+        backgroundThread1.setDaemon(true);
         // Start the thread
-        backgroundThread.start();
+        backgroundThread1.start();
     }  
     
     public void runTask(CheckBox run_stats,  GridPane grid, Text test, String critter) {
@@ -472,7 +483,7 @@ public class Main extends Application{
 					} catch (InvalidCritterException e1) {
 					}
 				}
-                Thread.sleep(100);
+                Thread.sleep(1000);
             }
             catch (InterruptedException e) {
                 //e.printStackTrace();
