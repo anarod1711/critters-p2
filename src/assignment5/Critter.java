@@ -449,15 +449,8 @@ public abstract class Critter {
         				}
         			}
         		}
-        		// need to delete dead critters
-        		// main critter is dead
-        		if (population.get(outer_idx).energy <= 0) {
-        			population.remove(outer_idx);
-        			outer_idx -= 1;
-        			inner_idx = population.size();
-        		}
         		// main critter beat other critter
-        		else if (population.get(inner_idx).energy <= 0) {
+        		if (population.get(inner_idx).energy <= 0) {
         			population.remove(inner_idx);
         			// removing critter, comes before main critter
         			if (inner_idx < outer_idx) {
@@ -467,6 +460,13 @@ public abstract class Critter {
         			else {
         				inner_idx -= 1;
         			}
+        		}
+        		// need to delete dead critters
+        		// main critter is dead
+        		if (population.get(outer_idx).energy <= 0) {
+        			population.remove(outer_idx);
+        			outer_idx -= 1;
+        			inner_idx = population.size();
         		}
         		// increment inner idx
         		inner_idx += 1;
