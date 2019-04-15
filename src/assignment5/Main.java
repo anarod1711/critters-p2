@@ -1,3 +1,17 @@
+/*
+ * CRITTERS Main.java
+ * EE422C Project 5 submission by
+ * Replace <...> with your actual data.
+ * <Analaura Rodriguez>
+ * <ar55665>
+ * <16225>
+ * <Kevin Han>
+ * <kdh2789>
+ * <16190>
+ * Slip days used: <0>
+ * Spring 2019
+ */
+
 package assignment5;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +35,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.event.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 
 public class Main extends Application{
@@ -79,14 +96,31 @@ public class Main extends Application{
 			 * 7. "run" --> the speed of animation
 			 */
 			BorderPane root = new BorderPane();
+			
 			GridPane grid = new GridPane();
-			root.setTop(grid);
+			
+			GridPane center = new GridPane();
+			center.setMinWidth(1000);
+			
+			ScrollPane scrollpane = new ScrollPane();
+			scrollpane.setContent(center);
+			scrollpane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+			scrollpane.setMaxHeight(300);
+			scrollpane.setTranslateY(70);
+			
+			
+			root.setTop(grid);			
+			root.setCenter(scrollpane);
+			
+			
 			// adding header for control
 			Text header = new Text();
 	    	header.setText("Welcome to Critters");
 	    	header.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 	    	header.setTranslateX(5);
 	    	header.setTranslateY(10);
+	    	
+	    	
 	    	// Create Critter
 	    	Text critter_name = new Text(); // title for type of critters
 	    	critter_name.setText("Choose a Critter:");
@@ -103,6 +137,8 @@ public class Main extends Application{
 	    	critter_num.setTranslateX(5);
 	    	critter_num.setTranslateY(80);
 	    	TextField critter_num_input = new TextField(); // user input for num of critters
+	    	critter_num_input.setMinWidth(225);
+	    	critter_num_input.setMaxWidth(225);
 	    	critter_num_input.setTranslateX(150);
 	    	critter_num_input.setTranslateY(80);
 	    	Button critter_add_btn = new Button("Add Critters"); // button to add critters
@@ -113,6 +149,8 @@ public class Main extends Application{
 	    	critters_added.setTranslateX(150);
 	    	critters_added.setTranslateY(100);
 	    	critters_added.setFill(Color.RED);
+	    	
+	    	
 	    	// run the world (time steps)
 	    	Text timestep_num = new Text(); // title for time steps
 	    	timestep_num.setText("Choose # of Steps:");
@@ -120,6 +158,8 @@ public class Main extends Application{
 	    	timestep_num.setTranslateX(5);
 	    	timestep_num.setTranslateY(130);
 	    	TextField timestep_input = new TextField(); // user input for num of steps
+	    	timestep_input.setMinWidth(225);
+	    	timestep_input.setMaxWidth(225);
 	    	timestep_input.setTranslateX(150);
 	    	timestep_input.setTranslateY(130);
 	    	Button timestep_btn = new Button("Add Steps"); // button to add steps
@@ -130,6 +170,8 @@ public class Main extends Application{
 	    	timestep_added.setTranslateX(150);
 	    	timestep_added.setTranslateY(150);
 	    	timestep_added.setFill(Color.RED);
+	    	
+	    	
 	    	// set the seed
 	    	Text seed_num = new Text(); // title for time steps
 	    	seed_num.setText("Choose Seed:");
@@ -137,6 +179,8 @@ public class Main extends Application{
 	    	seed_num.setTranslateX(5);
 	    	seed_num.setTranslateY(180);
 	    	TextField seed_input = new TextField(); // user input for num of steps
+	    	seed_input.setMinWidth(225);
+	    	seed_input.setMaxWidth(225);
 	    	seed_input.setTranslateX(150);
 	    	seed_input.setTranslateY(180);
 	    	Button seed_btn = new Button("Add Seed"); // button to add steps
@@ -147,8 +191,10 @@ public class Main extends Application{
 	    	seed_added.setTranslateX(150);
 	    	seed_added.setTranslateY(200);
 	    	seed_added.setFill(Color.RED);
+	    	
+	    	
 	    	// runStats
-	    	int y = 240;
+	    	int y = 0;
 	    	Collections.sort(critter_classes);
 	    	for (int i = 0; i < critter_classes.size(); i++) {
 	    		Text checkboxName = new Text(); // title for time steps
@@ -157,7 +203,7 @@ public class Main extends Application{
 		    	checkboxName.setTranslateX(5);
 		    	checkboxName.setTranslateY(y);
 		    	CheckBox checkbox = new CheckBox();
-		    	checkbox.setTranslateX(60);
+		    	checkbox.setTranslateX(75);
 		    	checkbox.setTranslateY(y);
 		    	
 		    	Text test = new Text();
@@ -178,11 +224,10 @@ public class Main extends Application{
 	            // set event to checkbox 
 	            checkbox.setOnAction(event);	    	
 		    	
-		    	grid.getChildren().add(checkboxName);
-		    	grid.getChildren().add(checkbox);
-		    	grid.getChildren().add(test);
-	    	}	
-	    	
+		    	center.getChildren().add(checkboxName);
+		    	center.getChildren().add(checkbox);
+		    	center.getChildren().add(test);
+	    	}    	
 	    	
 	    	
 	    	// animation
@@ -426,7 +471,7 @@ public class Main extends Application{
             	    	Critter.displayWorld(worldGrid);
             	    }
             	});
-                Thread.sleep(1000);
+                Thread.sleep(500);
             }
             catch (InterruptedException | InvalidCritterException e) {
                 //e.printStackTrace();
@@ -464,8 +509,10 @@ public class Main extends Application{
 						Constructor<?> constructor = critterClass.getConstructor();
 						Object new_critter = constructor.newInstance();
 						Method m = new_critter.getClass().getDeclaredMethod("runStats", List.class);
-						test.setText(((String) m.invoke(critterClass, critters)));
-						
+						String str_stats = ((String) m.invoke(critterClass, critters));
+						str_stats = str_stats.replace("\n", "");
+						str_stats = str_stats.trim().replaceAll(" +", " ");
+						test.setText(str_stats);
                     }	                    	
                     else {
                         test.setText("");
@@ -476,17 +523,16 @@ public class Main extends Application{
 						| IllegalAccessException | InvalidCritterException
 						| IllegalArgumentException | InvocationTargetException 
 						| InstantiationException k) {
-                	List<Critter> critters;
 					try {
+						List<Critter> critters = Critter.getInstances(critter);
 						critters = Critter.getInstances(critter);
 						test.setText(((String) Critter.runStats(critters)));
 					} catch (InvalidCritterException e1) {
 					}
 				}
-                Thread.sleep(1000);
+                Thread.sleep(500);
             }
             catch (InterruptedException e) {
-                //e.printStackTrace();
             }
         }
         test.setText("");

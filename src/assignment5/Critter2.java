@@ -1,6 +1,6 @@
 /*
  * CRITTERS Critter2.java
- * EE422C Project 4 submission by
+ * EE422C Project 5 submission by
  * Replace <...> with your actual data.
  * <Analaura Rodriguez>
  * <ar55665>

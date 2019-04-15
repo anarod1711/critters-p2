@@ -2,12 +2,12 @@
  * CRITTERS Critter.java
  * EE422C Project 5 submission by
  * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * <Analaura Rodriguez>
+ * <ar55665>
+ * <16225>
+ * <Kevin Han>
+ * <kdh2789>
+ * <16190>
  * Slip days used: <0>
  * Spring 2019
  */
@@ -138,9 +138,9 @@ public abstract class Critter {
     	pane.getChildren().clear();
     	paintGridLines(pane);
     	
-    	for (Critter critter : population) {
-    		Shape s = critter.getIcon(critter.viewShape());
-    		pane.add(s, critter.x_coord, critter.y_coord);
+    	for (int i = 0; i < population.size(); i++) {
+    		Shape s = population.get(i).getIcon(population.get(i).viewShape());
+    		pane.add(s, population.get(i).x_coord, population.get(i).y_coord);
     	}
     }
     
@@ -192,16 +192,17 @@ public abstract class Critter {
 				break;
 		case STAR: s = new Polygon();
 		((Polygon) s).getPoints().addAll(new Double[]{
-			    (double) size/2, (double) 1,
-			    (double) (size/6)*4, (double) (size/6)*2,
-			    (double) size-1, (double) (size/2),
-			    (double) (size/6)*4, (double) (size/6)*4,
-			    (double) (size/6)*5, (double) size-1,
-			    (double) (size/2), (double) (size/6)*5,
-			    (double) (size/6), (double) size-1,
-			    (double) (size/6)*2, (double) (size/6)*4,
-			    (double) 1, (double) (size/2),
-			    (double) (size/6)*2, (double) (size/6)*2});
+			    (double) size/2, (double) (size/6)*0.5, // 1
+			    (double) (size/6)*4, (double) (size/6)*2, // 2
+			    (double) (size/6)*5.5, (double) (size/2), // 3
+			    (double) (size/6)*4, (double) (size/6)*4, // 4
+			    (double) (size/6)*5, (double) (size/6)*5.5, // 5
+			    (double) (size/2), (double) (size/6)*5, // 6
+			    (double) (size/6), (double) (size/6)*5.5, // 7
+			    (double) (size/6)*2, (double) (size/6)*4, // 8
+			    (double) (size/6)*0.5, (double) (size/2), // 9
+			    (double) (size/6)*2, (double) (size/6)*2 // 10
+			    });
 			break;
 		default: s = new Circle(size/2);
 //		case TRIANGLE: s = new Triangle();
@@ -295,9 +296,9 @@ public abstract class Critter {
 		try {
 			// adds all instances of critter_class_name to collection critters
 			critter_class = Class.forName(critter_name);
-			for (Critter critter : population) {
-	        	if (critter_class.isInstance(critter)) {
-	        		critters.add(critter);
+			for (int i = 0; i < population.size(); i++) {
+	        	if (critter_class.isInstance(population.get(i))) {
+	        		critters.add(population.get(i));
 	        	}
 	        }
 		} catch (ClassNotFoundException e) {
@@ -328,44 +329,57 @@ public abstract class Critter {
     public static void worldTimeStep() throws InvalidCritterException {
     	/* saving original positions of critters, needed to imitate 
     	 * "simultaneous" movement
-    	 * movement of critters
     	 */
     	for (Critter critter : population) {
     		int[] coordinate = new int[2];
     		coordinate[0] = critter.x_coord;
     		coordinate[1] = critter.y_coord;
     		all_coordinates.add(coordinate);
+    	}
+    	
+    	 /* 
+    	  * movement of critters
+    	  */    	
+    	for (Critter critter : population) {
     		critter.doTimeStep();
     	}
+    	
     	// removal of critters
     	for (int i = 0; i < population.size(); i++) {
     		if (population.get(i).energy <= 0) {
     			population.remove(i);
+    			all_coordinates.remove(i);
     			i--;
     		}
-    	}  
+    	}
+    	
     	// checking for encounters between critters
     	encounter = true;
     	doEncounters();
     	encounter = false;
+    	
     	// depletion of rest energy cost
     	for (Critter critter : population) {
     		critter.energy -= Params.REST_ENERGY_COST;
     	}
-    	// removal of critters
+    	
+    	// removal of critters | removal from all_coordinates redundant
     	for (int i = 0; i < population.size(); i++) {
     		if (population.get(i).energy <= 0) {
     			population.remove(i);
     			i--;
     		}
     	}    	
+    	
     	// reset moved flag for all critters before next round
     	for (Critter critter : population) {
     		critter.moved = false;
     	}
+    	
     	genClover();
     	population.addAll(babies);
     	babies.clear();
+    	all_coordinates.clear();
     }
 
     /** 
@@ -452,6 +466,7 @@ public abstract class Critter {
         		// main critter beat other critter
         		if (population.get(inner_idx).energy <= 0) {
         			population.remove(inner_idx);
+        			all_coordinates.remove(inner_idx);
         			// removing critter, comes before main critter
         			if (inner_idx < outer_idx) {
         				outer_idx -= 1;
@@ -465,6 +480,7 @@ public abstract class Critter {
         		// main critter is dead
         		if (population.get(outer_idx).energy <= 0) {
         			population.remove(outer_idx);
+        			all_coordinates.remove(outer_idx);
         			outer_idx -= 1;
         			inner_idx = population.size();
         		}
