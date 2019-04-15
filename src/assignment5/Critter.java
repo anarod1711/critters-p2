@@ -457,7 +457,7 @@ public abstract class Critter {
         			inner_idx = population.size();
         		}
         		// main critter beat other critter
-        		if (population.get(inner_idx).energy <= 0) {
+        		else if (population.get(inner_idx).energy <= 0) {
         			population.remove(inner_idx);
         			// removing critter, comes before main critter
         			if (inner_idx < outer_idx) {
