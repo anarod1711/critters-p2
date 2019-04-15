@@ -170,33 +170,7 @@ public class Main extends Application{
 		    		  
 	                public void handle(ActionEvent e) 
 	                { 
-	                	try {
-	                		List<Critter> critters = Critter.getInstances(critter);
-		                    if (checkbox.isSelected()) {
-		                    	Class<?> critterClass = Class.forName(myPackage + "." + critter);
-								Constructor<?> constructor = critterClass.getConstructor();
-								Object new_critter = constructor.newInstance();
-								Method m = new_critter.getClass().getDeclaredMethod("runStats", List.class);
-								test.setText(((String) m.invoke(critterClass, critters)));
-								startTask(checkbox, grid);
-		                    }	                    	
-		                    else {
-		                        test.setText("");
-		                    }
-	                	} 
-		                catch (ClassNotFoundException 
-								| NoSuchMethodException | SecurityException 
-								| IllegalAccessException | InvalidCritterException
-								| IllegalArgumentException | InvocationTargetException 
-								| InstantiationException k) {
-		                	List<Critter> critters;
-							try {
-								critters = Critter.getInstances(critter);
-								test.setText(((String) Critter.runStats(critters)));
-								startTask(checkbox, grid);
-							} catch (InvalidCritterException e1) {
-							}
-						}
+	                	startTask(checkbox, grid, test, critter);
 	                }
 	            }; 
 	  
@@ -450,14 +424,14 @@ public class Main extends Application{
     }
     
     // attempt to continuously display run stats
-    public void startTask(CheckBox run_stats,  GridPane grid) 
+    public void startTask(CheckBox run_stats,  GridPane grid, Text test, String critter) 
     {
         // Create a Runnable
         Runnable task1 = new Runnable()
         {
             public void run()
             {
-                runTask(run_stats, grid);
+                runTask(run_stats, grid, test, critter);
             }
         };
  
@@ -469,15 +443,35 @@ public class Main extends Application{
         backgroundThread.start();
     }  
     
-    public void runTask(CheckBox run_stats, GridPane grid) {
-        while(!run_stats.isSelected()) {
+    public void runTask(CheckBox run_stats,  GridPane grid, Text test, String critter) {
+        while(run_stats.isSelected()) {
             try {
-            	System.out.println(1);
-            	//grid.setDisable(true);
-//            	for (int i = 0; i < run_num; i++) {
-//            		Critter.worldTimeStep();
-//            	}
-//            	Critter.displayWorld(worldGrid);
+            	try {
+            		List<Critter> critters = Critter.getInstances(critter);
+                    if (run_stats.isSelected()) {
+                    	Class<?> critterClass = Class.forName(myPackage + "." + critter);
+						Constructor<?> constructor = critterClass.getConstructor();
+						Object new_critter = constructor.newInstance();
+						Method m = new_critter.getClass().getDeclaredMethod("runStats", List.class);
+						test.setText(((String) m.invoke(critterClass, critters)));
+						
+                    }	                    	
+                    else {
+                        test.setText("");
+                    }
+            	} 
+                catch (ClassNotFoundException 
+						| NoSuchMethodException | SecurityException 
+						| IllegalAccessException | InvalidCritterException
+						| IllegalArgumentException | InvocationTargetException 
+						| InstantiationException k) {
+                	List<Critter> critters;
+					try {
+						critters = Critter.getInstances(critter);
+						test.setText(((String) Critter.runStats(critters)));
+					} catch (InvalidCritterException e1) {
+					}
+				}
                 Thread.sleep(100);
             }
             catch (InterruptedException e) {
